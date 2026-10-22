@@ -40,8 +40,17 @@ clock = pygame.time.Clock()
 
 
 # Тут опишите все классы игры.
-...
+class GameObject:
+    """Базовый класс для игровых объектов."""
 
+    def __init__(self, body_color=None):
+        """Инициализирует базовые атрибуты объекта."""
+        self.position = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
+        self.body_color = body_color
+
+    def draw(self):
+        """Абстрактный метод для отрисовки объекта."""
+        pass
 
 def main():
     # Инициализация PyGame:
