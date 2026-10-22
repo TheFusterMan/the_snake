@@ -8,6 +8,13 @@ GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
 
+# Множество всех доступных ячеек игрового поля:
+ALL_CELLS = {
+    (x * GRID_SIZE, y * GRID_SIZE)
+    for x in range(GRID_WIDTH)
+    for y in range(GRID_HEIGHT)
+}
+
 # Направления движения:
 UP = (0, -1)
 DOWN = (0, 1)
@@ -51,6 +58,29 @@ class GameObject:
     def draw(self):
         """Абстрактный метод для отрисовки объекта."""
         pass
+
+class Apple(GameObject):
+    """Класс, описывающий яблоко на игровом поле."""
+
+    def __init__(self, occupied_positions=None):
+        """Инициализирует яблоко и задает случайную позицию."""
+        super().__init__(APPLE_COLOR)
+        self.randomize_position(occupied_positions)
+
+    def randomize_position(self, occupied_positions=None):
+        """Устанавливает случайное положение яблока вне тела змейки."""
+        occupied = set(occupied_positions) if occupied_positions else set()
+        free_cells = tuple(ALL_CELLS - occupied)
+        if free_cells:
+            self.position = choice(free_cells)
+        else:
+            self.position = choice(tuple(ALL_CELLS))
+
+    def draw(self):
+        """Отрисовывает яблоко на игровой поверхности."""
+        rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(screen, self.body_color, rect)
+        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
 def main():
     # Инициализация PyGame:
