@@ -82,6 +82,62 @@ class Apple(GameObject):
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
+class Snake(GameObject):
+    """Класс, описывающий змейку и её поведение."""
+
+    def __init__(self):
+        """Инициализирует начальное состояние змейки."""
+        super().__init__(SNAKE_COLOR)
+        self.reset()
+        self.direction = RIGHT
+
+    def update_direction(self):
+        """Обновляет направление движения змейки."""
+        if self.next_direction:
+            self.direction = self.next_direction
+            self.next_direction = None
+
+    def move(self):
+        """Обновляет позицию змейки на игровом поле."""
+        cur_x, cur_y = self.get_head_position()
+        dir_x, dir_y = self.direction
+        new_x = (cur_x + dir_x * GRID_SIZE) % SCREEN_WIDTH
+        new_y = (cur_y + dir_y * GRID_SIZE) % SCREEN_HEIGHT
+        new_head = (new_x, new_y)
+
+        self.positions.insert(0, new_head)
+        if len(self.positions) > self.length:
+            self.last = self.positions.pop()
+        else:
+            self.last = None
+
+    def draw(self):
+        """Отрисовывает змейку на экране, затирая след."""
+        for position in self.positions:
+            rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
+            pygame.draw.rect(screen, self.body_color, rect)
+            pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
+        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(screen, self.body_color, head_rect)
+        pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
+
+        if self.last:
+            last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
+            pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
+
+    def get_head_position(self):
+        """Возвращает позицию головы змейки."""
+        return self.positions[0]
+
+    def reset(self):
+        """Сбрасывает змейку в начальное состояние."""
+        self.length = 1
+        self.positions = [((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))]
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])
+        self.next_direction = None
+        self.last = None
+
 def main():
     # Инициализация PyGame:
     pygame.init()
