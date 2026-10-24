@@ -1,4 +1,4 @@
-from random import choice, randint
+from random import choice
 
 import pygame
 
@@ -46,7 +46,6 @@ pygame.display.set_caption('Змейка')
 clock = pygame.time.Clock()
 
 
-# Тут опишите все классы игры.
 class GameObject:
     """Базовый класс для игровых объектов."""
 
@@ -58,6 +57,7 @@ class GameObject:
     def draw(self):
         """Абстрактный метод для отрисовки объекта."""
         pass
+
 
 class Apple(GameObject):
     """Класс, описывающий яблоко на игровом поле."""
@@ -81,6 +81,7 @@ class Apple(GameObject):
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
 
 class Snake(GameObject):
     """Класс, описывающий змейку и её поведение."""
@@ -138,6 +139,7 @@ class Snake(GameObject):
         self.next_direction = None
         self.last = None
 
+
 def handle_keys(game_object):
     """Обрабатывает нажатия клавиш пользователем."""
     for event in pygame.event.get():
@@ -156,6 +158,7 @@ def handle_keys(game_object):
                 game_object.next_direction = LEFT
             elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
+
 
 def main():
     """Основной игровой цикл."""
